@@ -1,6 +1,8 @@
 import { LitElement, html, css } from "lit";
 import "./badazzeling-header.js";
 import "./badazzeling-footer.js";
+import "./badazzeling-home.js";
+import "./badazzeling-calendar.js";
 
 export class BadazzelingApp extends LitElement {
   static get tag() {
@@ -16,6 +18,7 @@ export class BadazzelingApp extends LitElement {
   constructor() {
     super();
     this.page = this.getPageFromUrl();
+
     this._handlePopState = () => {
       this.page = this.getPageFromUrl();
     };
@@ -36,97 +39,126 @@ export class BadazzelingApp extends LitElement {
     return params.get("page") || "home";
   }
 
-  renderPage() {
-    switch (this.page) {
-      case "about":
-        return html`<h2>About</h2><p>Learn about competitive badazzeling.</p>`;
-
-      case "what-is-badazzeling":
-        return html`<h2>What is Badazzeling</h2><p>Explain what badazzeling is here.</p>`;
-
-      case "scoring":
-        return html`<h2>Scoring</h2><p>Break down speed and aesthetic scoring here.</p>`;
-
-      case "competitions":
-        return html`<h2>Competitions</h2><p>Overview of competitions.</p>`;
-
-      case "current":
-        return html`<h2>Current Competitions</h2><p>Show current competitions here.</p>`;
-
-      case "past":
-        return html`<h2>Past Competitions</h2><p>Show past competitions here.</p>`;
-
-      case "results":
-        return html`<h2>Results</h2><p>Show winners and scores here.</p>`;
-
-      case "calendar":
-        return html`<h2>Calendar</h2><p>Calendar overview here.</p>`;
-
-      case "schedule":
-        return html`<h2>Schedule</h2><p>Show the schedule here.</p>`;
-
-      case "upcoming-events":
-        return html`<h2>Upcoming Events</h2><p>Show upcoming events here.</p>`;
-
-      case "important-dates":
-        return html`<h2>Important Dates</h2><p>Show important dates here.</p>`;
-
-      case "join":
-        return html`<h2>Join</h2><p>Join page overview.</p>`;
-
-      case "why-join":
-        return html`<h2>Why Join</h2><p>Explain why users should join.</p>`;
-
-      case "how-to-join":
-        return html`<h2>How to Join</h2><p>Explain how to join here.</p>`;
-
-      case "faq":
-        return html`<h2>FAQ</h2><p>Frequently asked questions go here.</p>`;
-
-      default:
-        return html`<h2>Home</h2><p>Welcome to Competitive Badazzeling.</p>`;
-    }
+  changePage(page) {
+    const url = new URL(window.location);
+    url.searchParams.set("page", page);
+    window.history.pushState({}, "", url);
+    this.page = page;
   }
 
-  static get styles() {
-  return css`
-    :host {
-      display: block;
-      background: linear-gradient(180deg, #fffdfd 0%, #f8f4ff 100%);
-      color: #222;
-      min-height: 100vh;
-    }
+  renderPage() {
+    switch (this.page) {
+      case "home":
+        return html`<badazzeling-home></badazzeling-home>`;
 
-    main {
-      padding: 0 20px 20px 20px;
-    }
+      case "calendar":
+      case "schedule":
+        return html`<badazzeling-calendar></badazzeling-calendar>`;
 
-    .page-card {
-      background: white;
-      border-radius: 24px;
-      padding: 32px;
-      min-height: 420px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-    }
+      case "about":
+      case "what-is-badazzeling":
+        return html`
+          <section class="page">
+            <h2>What is Badazzeling?</h2>
+            <p>
+              Badazzeling is a competitive league where players bedazzle items
+              under pressure while being judged on speed, creativity, and sparkle.
+            </p>
+          </section>
+        `;
 
-    
-  `;
-}
+      case "scoring":
+        return html`
+          <section class="page">
+            <h2>Scoring</h2>
+            <p>
+              Players are judged in two main categories: speed and aesthetic appeal.
+            </p>
+          </section>
+        `;
+
+      case "competitions":
+      case "current":
+        return html`
+          <section class="page">
+            <h2>Current Competitions</h2>
+            <p>
+              Current challenge: bedazzle a water bottle using a themed color palette.
+            </p>
+          </section>
+        `;
+
+      case "past":
+        return html`<section class="page"><h2>Past Competitions</h2></section>`;
+
+      case "results":
+        return html`<section class="page"><h2>Results</h2></section>`;
+
+      case "upcoming-events":
+        return html`<section class="page"><h2>Upcoming Events</h2></section>`;
+
+      case "important-dates":
+        return html`<section class="page"><h2>Important Dates</h2></section>`;
+
+      case "join":
+      case "why-join":
+        return html`
+          <section class="page">
+            <h2>Why Join?</h2>
+            <p>Join the league to compete, create, and bring your best sparkle.</p>
+          </section>
+        `;
+
+      case "how-to-join":
+        return html`<section class="page"><h2>How to Join</h2></section>`;
+
+      case "faq":
+        return html`<section class="page"><h2>FAQ</h2></section>`;
+
+      default:
+        return html`<badazzeling-home></badazzeling-home>`;
+    }
+  }
 
   render() {
     return html`
       <badazzeling-header
-        site-title="Competitive Badazzeling"
-        active-page="${this.page}"
+        .page="${this.page}"
+        @page-changed="${(e) => this.changePage(e.detail.page)}"
       ></badazzeling-header>
 
-      <main>
-        <div class="page-card">
-          ${this.renderPage()}
-        </div>
-      </main>
+      <main>${this.renderPage()}</main>
 
       <badazzeling-footer></badazzeling-footer>
+    `;
+  }
+
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #fffdfd 0%, #f8f4ff 100%);
+        color: #111;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        min-height: 70vh;
+      }
+
+      .page {
+        max-width: 1000px;
+        margin: 32px auto;
+        padding: 36px 24px;
+        background: white;
+        border-radius: 28px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      }
+
+      h2 {
+        color: #111;
+      }
     `;
   }
 }

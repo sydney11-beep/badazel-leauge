@@ -1,0 +1,136 @@
+{
+  "id": "badazzeling-site",
+  "title": "Competitive Badazzeling",
+  "author": "Sydney Reiter",
+  "description": "A competitive platform for creative badazzeling challenges.",
+  "items": [
+    {
+      "id": "home",
+      "title": "Home",
+      "slug": "home",
+      "location": "home.html",
+      "parent": null,
+      "order": 0
+    },
+    {
+      "id": "about",
+      "title": "About",
+      "slug": "about",
+      "location": "about.html",
+      "parent": null,
+      "order": 1
+    },
+    {
+      "id": "what-is-badazzeling",
+      "title": "What is Badazzeling",
+      "slug": "what-is-badazzeling",
+      "location": "what-is-badazzeling.html",
+      "parent": "about",
+      "order": 0
+    },
+    {
+      "id": "scoring",
+      "title": "Scoring",
+      "slug": "scoring",
+      "location": "scoring.html",
+      "parent": "about",
+      "order": 1
+    },
+    {
+      "id": "competitions",
+      "title": "Competitions",
+      "slug": "competitions",
+      "location": "competitions.html",
+      "parent": null,
+      "order": 2
+    },
+    {
+      "id": "current",
+      "title": "Current",
+      "slug": "current",
+      "location": "current.html",
+      "parent": "competitions",
+      "order": 0
+    },
+    {
+      "id": "past",
+      "title": "Past",
+      "slug": "past",
+      "location": "past.html",
+      "parent": "competitions",
+      "order": 1
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "slug": "results",
+      "location": "results.html",
+      "parent": "competitions",
+      "order": 2
+    },
+    {
+      "id": "calendar",
+      "title": "Calendar",
+      "slug": "calendar",
+      "location": "calendar.html",
+      "parent": null,
+      "order": 3
+    },
+    {
+      "id": "schedule",
+      "title": "Schedule",
+      "slug": "schedule",
+      "location": "schedule.html",
+      "parent": "calendar",
+      "order": 0
+    },
+    {
+      "id": "upcoming-events",
+      "title": "Upcoming Events",
+      "slug": "upcoming-events",
+      "location": "upcoming-events.html",
+      "parent": "calendar",
+      "order": 1
+    },
+    {
+      "id": "important-dates",
+      "title": "Important Dates",
+      "slug": "important-dates",
+      "location": "important-dates.html",
+      "parent": "calendar",
+      "order": 2
+    },
+    {
+      "id": "join",
+      "title": "Join",
+      "slug": "join",
+      "location": "join.html",
+      "parent": null,
+      "order": 4
+    },
+    {
+      "id": "why-join",
+      "title": "Why Join",
+      "slug": "why-join",
+      "location": "why-join.html",
+      "parent": "join",
+      "order": 0
+    },
+    {
+      "id": "how-to-join",
+      "title": "How to Join",
+      "slug": "how-to-join",
+      "location": "how-to-join.html",
+      "parent": "join",
+      "order": 1
+    },
+    {
+      "id": "faq",
+      "title": "FAQ",
+      "slug": "faq",
+      "location": "faq.html",
+      "parent": "join",
+      "order": 2
+    }
+  ]
+}
