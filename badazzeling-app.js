@@ -52,6 +52,10 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
   }
 
   renderTeamsPage() {
+    const teamSparkle = new URL("./assets/teamsparkle.png", import.meta.url).href;
+    const gemRush = new URL("./assets/gemrush.png", import.meta.url).href;
+    const rebels = new URL("./assets/rebels.png", import.meta.url).href;
+
     return html`
       <section class="page">
         <h2>Teams</h2>
@@ -63,7 +67,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Team Sparkle"
             description="Clean pastel designs and strong aesthetic scores."
-            image="/assets/teamsparkle.png"
+            .image="${teamSparkle}"
             page="team-sparkle"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>
@@ -71,7 +75,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Gem Rush"
             description="Fast rounds, bold colors, and speed-focused challenges."
-            image="/assets/gemrush.png"
+            .image="${gemRush}"
             page="gem-rush"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>
@@ -79,7 +83,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Rhinestone Rebels"
             description="Creative risks, dramatic sparkle themes, and unique objects."
-            image="/assets/rebels.png"
+            .image="${rebels}"
             page="rhinestone-rebels"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>
@@ -303,23 +307,6 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           .page {
             margin: var(--ddd-spacing-4);
             padding: var(--ddd-spacing-5);
-          }
-        }
-
-        @media (prefers-color-scheme: dark) {
-          :host {
-            background: linear-gradient(180deg, #18151f 0%, #111111 100%);
-            color: #f8f4ff;
-          }
-
-          .page {
-            background: #24212d;
-            color: #f8f4ff;
-            border: 1px solid #3b344a;
-          }
-
-          h2 {
-            color: #ffffff;
           }
         }
       `,

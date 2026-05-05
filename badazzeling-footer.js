@@ -18,11 +18,13 @@ export class BadazzelingFooter extends DDDSuper(LitElement) {
   }
 
   render() {
+    const logo = new URL("./assets/cbllogo.png", import.meta.url).href;
+
     return html`
       <footer>
         <div class="brand">
           <span class="logo">
-            <img src="/assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+            <img src="${logo}" alt="Competitive Badazzeling logo" />
           </span>
           <div>
             <h2>Competitive Badazzeling</h2>

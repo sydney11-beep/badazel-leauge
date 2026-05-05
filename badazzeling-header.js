@@ -59,11 +59,13 @@ export class BadazzelingHeader extends DDDSuper(LitElement) {
   }
 
   render() {
+    const logo = new URL("./assets/cbllogo.png", import.meta.url).href;
+
     return html`
       <header>
         <button class="brand" @click="${() => this.goToPage("home")}">
           <span class="logo">
-            <img src="/assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+            <img src="${logo}" alt="Competitive Badazzeling logo" />
           </span>
 
           <span class="brand-text">
