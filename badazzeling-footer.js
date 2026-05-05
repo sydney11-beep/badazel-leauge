@@ -22,7 +22,7 @@ export class BadazzelingFooter extends DDDSuper(LitElement) {
       <footer>
         <div class="brand">
           <span class="logo">
-            <img src="./assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+            <img src="/assets/cbllogo.png" alt="Competitive Badazzeling logo" />
           </span>
           <div>
             <h2>Competitive Badazzeling</h2>

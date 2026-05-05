@@ -63,7 +63,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Team Sparkle"
             description="Clean pastel designs and strong aesthetic scores."
-            image="./assets/teamsparkle.png"
+            image="/assets/teamsparkle.png"
             page="team-sparkle"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>
@@ -71,7 +71,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Gem Rush"
             description="Fast rounds, bold colors, and speed-focused challenges."
-            image="./assets/gemrush.png"
+            image="/assets/gemrush.png"
             page="gem-rush"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>
@@ -79,7 +79,7 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           <badazzeling-team-card
             team-name="Rhinestone Rebels"
             description="Creative risks, dramatic sparkle themes, and unique objects."
-            image="./assets/rebels.png"
+            image="/assets/rebels.png"
             page="rhinestone-rebels"
             @page-changed="${(e) => this.changePage(e.detail.page)}"
           ></badazzeling-team-card>

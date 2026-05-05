@@ -63,7 +63,7 @@ export class BadazzelingHeader extends DDDSuper(LitElement) {
       <header>
         <button class="brand" @click="${() => this.goToPage("home")}">
           <span class="logo">
-            <img src="./assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+            <img src="/assets/cbllogo.png" alt="Competitive Badazzeling logo" />
           </span>
 
           <span class="brand-text">
