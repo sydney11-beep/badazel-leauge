@@ -1,13 +1,15 @@
 import { LitElement, html, css } from "lit";
+import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import "./badazzeling-label.js";
 
-export class BadazzelingCompetitionCard extends LitElement {
+export class BadazzelingCompetitionCard extends DDDSuper(LitElement) {
   static get tag() {
     return "badazzeling-competition-card";
   }
 
   static get properties() {
     return {
+      ...super.properties,
       title: { type: String },
       description: { type: String },
       theme: { type: String },
@@ -39,43 +41,70 @@ export class BadazzelingCompetitionCard extends LitElement {
   }
 
   static get styles() {
-    return css`
-      .card {
-        border-radius: 28px;
-        padding: 30px;
-        min-height: 220px;
-        color: #111;
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
-      }
+    return [
+      super.styles,
+      css`
+        :host {
+          display: block;
+          font-family: var(--ddd-font-navigation, Arial, sans-serif);
+        }
 
-      .featured {
-        background: #d3f8e2;
-      }
+        .card {
+          border-radius: var(--ddd-radius-xl);
+          padding: var(--ddd-spacing-6);
+          min-height: 220px;
+          color: #111;
+          box-shadow: var(--ddd-boxShadow-sm);
+        }
 
-      .supplies {
-        background: #fff6c1;
-      }
+        .featured {
+          background: #d3f8e2;
+        }
 
-      h3 {
-        margin-top: 0;
-        margin-bottom: 16px;
-        font-size: 1.8rem;
-        font-weight: 700;
-      }
+        .supplies {
+          background: #fff6c1;
+        }
 
-      p {
-        line-height: 1.7;
-        margin-bottom: 18px;
-      }
+        h3 {
+          margin-top: 0;
+          margin-bottom: var(--ddd-spacing-4);
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #111;
+        }
 
-      .pill-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 18px;
-      }
-    `;
+        p {
+          line-height: 1.7;
+          margin-bottom: var(--ddd-spacing-4);
+        }
+
+        .pill-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--ddd-spacing-3);
+          margin-top: var(--ddd-spacing-4);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .featured {
+            background: #263b32;
+            color: #ffffff;
+          }
+
+          .supplies {
+            background: #4b4325;
+            color: #ffffff;
+          }
+
+          h3 {
+            color: #ffffff;
+          }
+        }
+      `,
+    ];
   }
 }
 
-customElements.define(BadazzelingCompetitionCard.tag, BadazzelingCompetitionCard);
+if (!customElements.get(BadazzelingCompetitionCard.tag)) {
+  customElements.define(BadazzelingCompetitionCard.tag, BadazzelingCompetitionCard);
+}

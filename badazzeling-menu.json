@@ -3,6 +3,8 @@
   "title": "Competitive Badazzeling",
   "author": "Sydney Reiter",
   "description": "A competitive platform for creative badazzeling challenges.",
+  "license": "by-sa",
+  "metadata": {},
   "items": [
     {
       "id": "home",
@@ -10,7 +12,9 @@
       "slug": "home",
       "location": "home.html",
       "parent": null,
-      "order": 0
+      "order": 0,
+      "indent": 1,
+      "metadata": {}
     },
     {
       "id": "about",
@@ -18,7 +22,9 @@
       "slug": "about",
       "location": "about.html",
       "parent": null,
-      "order": 1
+      "order": 1,
+      "indent": 1,
+      "metadata": {}
     },
     {
       "id": "what-is-badazzeling",
@@ -26,7 +32,9 @@
       "slug": "what-is-badazzeling",
       "location": "what-is-badazzeling.html",
       "parent": "about",
-      "order": 0
+      "order": 0,
+      "indent": 2,
+      "metadata": {}
     },
     {
       "id": "scoring",
@@ -34,39 +42,49 @@
       "slug": "scoring",
       "location": "scoring.html",
       "parent": "about",
-      "order": 1
+      "order": 1,
+      "indent": 2,
+      "metadata": {}
     },
     {
-      "id": "competitions",
-      "title": "Competitions",
-      "slug": "competitions",
-      "location": "competitions.html",
+      "id": "teams",
+      "title": "Teams",
+      "slug": "teams",
+      "location": "teams.html",
       "parent": null,
-      "order": 2
+      "order": 2,
+      "indent": 1,
+      "metadata": {}
     },
     {
-      "id": "current",
-      "title": "Current",
-      "slug": "current",
-      "location": "current.html",
-      "parent": "competitions",
-      "order": 0
+      "id": "team-sparkle",
+      "title": "Team Sparkle",
+      "slug": "team-sparkle",
+      "location": "team-sparkle.html",
+      "parent": "teams",
+      "order": 0,
+      "indent": 2,
+      "metadata": {}
     },
     {
-      "id": "past",
-      "title": "Past",
-      "slug": "past",
-      "location": "past.html",
-      "parent": "competitions",
-      "order": 1
+      "id": "gem-rush",
+      "title": "Gem Rush",
+      "slug": "gem-rush",
+      "location": "gem-rush.html",
+      "parent": "teams",
+      "order": 1,
+      "indent": 2,
+      "metadata": {}
     },
     {
-      "id": "results",
-      "title": "Results",
-      "slug": "results",
-      "location": "results.html",
-      "parent": "competitions",
-      "order": 2
+      "id": "rhinestone-rebels",
+      "title": "Rhinestone Rebels",
+      "slug": "rhinestone-rebels",
+      "location": "rhinestone-rebels.html",
+      "parent": "teams",
+      "order": 2,
+      "indent": 2,
+      "metadata": {}
     },
     {
       "id": "calendar",
@@ -74,7 +92,9 @@
       "slug": "calendar",
       "location": "calendar.html",
       "parent": null,
-      "order": 3
+      "order": 3,
+      "indent": 1,
+      "metadata": {}
     },
     {
       "id": "schedule",
@@ -82,7 +102,9 @@
       "slug": "schedule",
       "location": "schedule.html",
       "parent": "calendar",
-      "order": 0
+      "order": 0,
+      "indent": 2,
+      "metadata": {}
     },
     {
       "id": "upcoming-events",
@@ -90,7 +112,9 @@
       "slug": "upcoming-events",
       "location": "upcoming-events.html",
       "parent": "calendar",
-      "order": 1
+      "order": 1,
+      "indent": 2,
+      "metadata": {}
     },
     {
       "id": "important-dates",
@@ -98,7 +122,9 @@
       "slug": "important-dates",
       "location": "important-dates.html",
       "parent": "calendar",
-      "order": 2
+      "order": 2,
+      "indent": 2,
+      "metadata": {}
     },
     {
       "id": "join",
@@ -106,23 +132,9 @@
       "slug": "join",
       "location": "join.html",
       "parent": null,
-      "order": 4
-    },
-    {
-      "id": "why-join",
-      "title": "Why Join",
-      "slug": "why-join",
-      "location": "why-join.html",
-      "parent": "join",
-      "order": 0
-    },
-    {
-      "id": "how-to-join",
-      "title": "How to Join",
-      "slug": "how-to-join",
-      "location": "how-to-join.html",
-      "parent": "join",
-      "order": 1
+      "order": 4,
+      "indent": 1,
+      "metadata": {}
     },
     {
       "id": "faq",
@@ -130,7 +142,9 @@
       "slug": "faq",
       "location": "faq.html",
       "parent": "join",
-      "order": 2
+      "order": 0,
+      "indent": 2,
+      "metadata": {}
     }
   ]
 }

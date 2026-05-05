@@ -6,18 +6,43 @@ export class BadazzelingFooter extends DDDSuper(LitElement) {
     return "badazzeling-footer";
   }
 
-  static get properties() {
-    return {
-      ...super.properties,
-      siteTitle: { type: String, attribute: "site-title" },
-      year: { type: Number },
-    };
+  changePage(page, e) {
+    e.preventDefault();
+    this.dispatchEvent(
+      new CustomEvent("page-changed", {
+        detail: { page },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
-  constructor() {
-    super();
-    this.siteTitle = "Competitive Badazzeling";
-    this.year = new Date().getFullYear();
+  render() {
+    return html`
+      <footer>
+        <div class="brand">
+          <span class="logo">
+            <img src="./assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+          </span>
+          <div>
+            <h2>Competitive Badazzeling</h2>
+            <p>Join the sparkle. Create. Compete. Win.</p>
+          </div>
+        </div>
+
+        <nav>
+          <a href="?page=about" @click="${(e) => this.changePage("about", e)}">✨ About</a>
+          <a href="?page=teams" @click="${(e) => this.changePage("teams", e)}">👥 Teams</a>
+          <a href="?page=calendar" @click="${(e) => this.changePage("calendar", e)}">📅 Calendar</a>
+          <a href="?page=join" @click="${(e) => this.changePage("join", e)}">💖 Join</a>
+        </nav>
+
+        <div class="contact">
+          <strong>Questions?</strong>
+          <a href="mailto:hello@competitivebadazzeling.com">Email Us!</a>
+        </div>
+      </footer>
+    `;
   }
 
   static get styles() {
@@ -26,218 +51,108 @@ export class BadazzelingFooter extends DDDSuper(LitElement) {
       css`
         :host {
           display: block;
-          margin: 32px 20px 20px 20px;
-          font-family: var(--ddd-font-navigation, Arial, sans-serif);
+          margin: var(--ddd-spacing-6) var(--ddd-spacing-4) var(--ddd-spacing-4);
+          font-family: var(--ddd-font-navigation);
         }
 
         footer {
-          background: linear-gradient(135deg, #f5b6d6, #d6c7ec, #a9d5ee);
-          border-radius: 28px;
-          padding: 28px 34px 24px 34px;
-          color: #222;
-          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
-        }
-
-        .footer-top {
           display: grid;
-          grid-template-columns: auto 1fr auto;
+          grid-template-columns: 1fr auto 1fr;
           align-items: center;
-          gap: 28px;
+          gap: var(--ddd-spacing-5);
+          padding: var(--ddd-spacing-5);
+          border-radius: var(--ddd-radius-xl);
+          background: linear-gradient(135deg, #f5b6d6, #d6c7ec, #a9d5ee);
+          color: #1d1b24;
+          box-shadow: var(--ddd-boxShadow-sm);
         }
 
         .brand {
           display: flex;
           align-items: center;
-          gap: 16px;
-          min-width: 0;
+          gap: var(--ddd-spacing-3);
         }
 
-        .logo-box {
-          width: 74px;
-          height: 74px;
-          border-radius: 18px;
-          background: rgba(255, 255, 255, 0.45);
-          border: 2px solid rgba(255, 255, 255, 0.5);
+        .logo {
+          width: 56px;
+          height: 56px;
+          border-radius: var(--ddd-radius-md);
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.9);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 34px;
           flex-shrink: 0;
         }
 
-        .brand-text {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
+        .logo img {
+          width: 150%;
+          height: 150%;
+          object-fit: cover;
+          transform: scale(1.25);
         }
 
-        .site-name {
-          font-size: 1.3rem;
+        h2,
+        p {
+          margin: 0;
+        }
+
+        h2 {
+          font-size: 1.15rem;
           font-weight: 800;
-          line-height: 1.1;
         }
 
-        .tagline {
-          font-size: 0.95rem;
-          color: rgba(34, 34, 34, 0.8);
+        p {
+          opacity: 0.75;
         }
 
-        .middle {
+        nav {
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 14px;
-          min-width: 0;
-        }
-
-        .links {
-          display: flex;
-          justify-content: center;
-          gap: 22px;
+          gap: var(--ddd-spacing-3);
           flex-wrap: wrap;
+          justify-content: center;
         }
 
-        .links a {
+        nav a,
+        .contact a {
+          color: #1d1b24;
           text-decoration: none;
-          color: #222;
-          font-weight: 700;
-          padding: 8px 12px;
+          font-weight: 800;
           border-radius: 999px;
-          cursor: pointer;
-          transition: background 0.2s ease;
         }
 
-        .links a:hover,
-        .links a:focus-visible {
-          background: rgba(255, 255, 255, 0.35);
-          outline: none;
+        nav a {
+          background: rgba(255, 255, 255, 0.3);
+          padding: var(--ddd-spacing-2) var(--ddd-spacing-3);
         }
 
-        .copyright {
-          font-size: 0.95rem;
-          color: rgba(34, 34, 34, 0.72);
-          text-align: center;
+        nav a:hover {
+          background: rgba(255, 255, 255, 0.55);
         }
 
-        .cta {
+        .contact {
           display: flex;
-          align-items: center;
-          gap: 14px;
-          flex-wrap: wrap;
           justify-content: flex-end;
+          gap: var(--ddd-spacing-2);
+          font-weight: 800;
         }
 
-        .cta-text {
-          font-size: 1.1rem;
-          font-weight: 700;
-          white-space: nowrap;
-        }
-
-        .cta-button {
-          display: inline-block;
-          text-decoration: none;
-          background: #f48fb8;
-          color: white;
-          font-weight: 700;
-          padding: 12px 20px;
-          border-radius: 14px;
-          transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .cta-button:hover,
-        .cta-button:focus-visible {
-          transform: translateY(-1px);
-          opacity: 0.92;
-          outline: none;
-        }
-
-        @media (max-width: 1100px) {
-          .footer-top {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-
-          .brand {
-            justify-content: center;
-          }
-
-          .middle {
-            align-items: center;
-          }
-
-          .cta {
-            justify-content: center;
-          }
-        }
-
-        @media (max-width: 650px) {
+        @media (max-width: 900px) {
           footer {
-            padding: 24px 18px 20px 18px;
-          }
-
-          .brand {
-            flex-direction: column;
+            grid-template-columns: 1fr;
             text-align: center;
           }
 
-          .site-name {
-            font-size: 1.15rem;
-          }
-
-          .tagline {
-            font-size: 0.9rem;
-          }
-
-          .links {
-            gap: 10px;
-          }
-
-          .cta-text {
-            font-size: 1rem;
+          .brand,
+          .contact {
+            justify-content: center;
           }
         }
       `,
     ];
   }
-
-  navigateTo(page, e) {
-    e.preventDefault();
-    window.history.pushState({}, "", `?page=${page}`);
-    window.dispatchEvent(new PopStateEvent("popstate"));
-  }
-
-  render() {
-    return html`
-      <footer>
-        <div class="footer-top">
-          <div class="brand">
-            <div class="logo-box" aria-hidden="true">💎</div>
-            <div class="brand-text">
-              <div class="site-name">${this.siteTitle}</div>
-              <div class="tagline">Join the sparkle. Create. Compete. Win.</div>
-            </div>
-          </div>
-
-          <div class="middle">
-            <div class="links">
-              <a href="?page=about" @click="${(e) => this.navigateTo("about", e)}">About</a>
-              <a href="?page=competitions" @click="${(e) => this.navigateTo("competitions", e)}">Competitions</a>
-              <a href="?page=calendar" @click="${(e) => this.navigateTo("calendar", e)}">Calendar</a>
-              <a href="?page=join" @click="${(e) => this.navigateTo("join", e)}">Join</a>
-            </div>
-
-            <div class="copyright">© ${this.year} ${this.siteTitle}</div>
-          </div>
-
-          <div class="cta">
-            <div class="cta-text">Questions?</div>
-            <a class="cta-button" href="mailto:hello@competitivebadazzeling.com">Email Us!</a>
-          </div>
-        </div>
-      </footer>
-    `;
-  }
 }
 
-customElements.define(BadazzelingFooter.tag, BadazzelingFooter);
+if (!customElements.get(BadazzelingFooter.tag)) {
+  customElements.define(BadazzelingFooter.tag, BadazzelingFooter);
+}

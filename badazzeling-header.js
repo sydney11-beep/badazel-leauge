@@ -1,12 +1,14 @@
 import { LitElement, html, css } from "lit";
+import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 
-export class BadazzelingHeader extends LitElement {
+export class BadazzelingHeader extends DDDSuper(LitElement) {
   static get tag() {
     return "badazzeling-header";
   }
 
   static get properties() {
     return {
+      ...super.properties,
       page: { type: String },
       openMenu: { type: String },
     };
@@ -29,19 +31,22 @@ export class BadazzelingHeader extends LitElement {
     this.openMenu = "";
   }
 
-  toggleMenu(menu) {
+  openPageAndMenu(page, menu) {
+    this.dispatchEvent(
+      new CustomEvent("page-changed", {
+        detail: { page },
+        bubbles: true,
+        composed: true,
+      })
+    );
     this.openMenu = this.openMenu === menu ? "" : menu;
   }
 
-  activeClass(pages) {
-    return pages.includes(this.page) ? "active" : "";
-  }
-
-  renderDropdown(menu, items) {
+  renderDropdown(menu, items, alignRight = false) {
     if (this.openMenu !== menu) return "";
 
     return html`
-      <div class="dropdown">
+      <div class="dropdown ${alignRight ? "right" : ""}">
         ${items.map(
           (item) => html`
             <button class="dropdown-link" @click="${() => this.goToPage(item.page)}">
@@ -57,44 +62,37 @@ export class BadazzelingHeader extends LitElement {
     return html`
       <header>
         <button class="brand" @click="${() => this.goToPage("home")}">
-          <span class="logo">💎</span>
-          <span>Competitive Badazzeling</span>
+          <span class="logo">
+            <img src="./assets/cbllogo.png" alt="Competitive Badazzeling logo" />
+          </span>
+
+          <span class="brand-text">
+            <span class="title">Competitive Badazzeling</span>
+            <span class="tagline">Join the sparkle. Create. Compete. Win.</span>
+          </span>
         </button>
 
         <nav>
           <div class="nav-item">
-            <button
-              class="nav-button ${this.activeClass(["about", "what-is-badazzeling", "scoring"])}"
-              @click="${() => this.toggleMenu("about")}"
-            >
+            <button class="nav-button" @click="${() => this.openPageAndMenu("about", "about")}">
               ✨ About
             </button>
-            ${this.renderDropdown("about", [
-              { label: "What is Badazzeling", page: "what-is-badazzeling" },
-              { label: "Scoring", page: "scoring" },
-            ])}
+            ${this.renderDropdown("about", [{ label: "Scoring", page: "scoring" }])}
           </div>
 
           <div class="nav-item">
-            <button
-              class="nav-button ${this.activeClass(["competitions", "current", "past", "results"])}"
-              @click="${() => this.toggleMenu("competitions")}"
-            >
-              🎯 Competitions
+            <button class="nav-button" @click="${() => this.openPageAndMenu("teams", "teams")}">
+              👥 Teams
             </button>
-            ${this.renderDropdown("competitions", [
-              { label: "Current", page: "current" },
-              { label: "Past", page: "past" },
-              { label: "Results", page: "results" },
+            ${this.renderDropdown("teams", [
+              { label: "Team Sparkle", page: "team-sparkle" },
+              { label: "Gem Rush", page: "gem-rush" },
+              { label: "Rhinestone Rebels", page: "rhinestone-rebels" },
             ])}
           </div>
 
           <div class="nav-item">
-            <button
-              class="nav-button ${this.activeClass(["calendar", "schedule", "upcoming-events", "important-dates"])}"
-              @click="${() => this.goToPage("calendar")}"
-              @mouseenter="${() => (this.openMenu = "calendar")}"
-            >
+            <button class="nav-button" @click="${() => this.openPageAndMenu("calendar", "calendar")}">
               📅 Calendar
             </button>
             ${this.renderDropdown("calendar", [
@@ -105,17 +103,10 @@ export class BadazzelingHeader extends LitElement {
           </div>
 
           <div class="nav-item">
-            <button
-              class="nav-button ${this.activeClass(["join", "why-join", "how-to-join", "faq"])}"
-              @click="${() => this.toggleMenu("join")}"
-            >
+            <button class="nav-button" @click="${() => this.openPageAndMenu("join", "join")}">
               💖 Join
             </button>
-            ${this.renderDropdown("join", [
-              { label: "Why Join", page: "why-join" },
-              { label: "How to Join", page: "how-to-join" },
-              { label: "FAQ", page: "faq" },
-            ])}
+            ${this.renderDropdown("join", [{ label: "FAQ", page: "faq" }], true)}
           </div>
         </nav>
       </header>
@@ -123,120 +114,158 @@ export class BadazzelingHeader extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
+    return [
+      super.styles,
+      css`
+        :host {
+          display: block;
+          margin: var(--ddd-spacing-4);
+          font-family: var(--ddd-font-navigation);
+        }
 
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 40px;
-        padding: 28px 36px;
-        background: linear-gradient(135deg, #f5b6d6, #d6c7ec, #a9d5ee);
-        border: 2px solid #e9cde3;
-        border-radius: 22px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        max-width: 1600px;
-        margin: 20px auto;
-        font-family: Arial, sans-serif;
-      }
-
-      .brand {
-        border: none;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-        font-weight: 700;
-        color: #222;
-        cursor: pointer;
-      }
-
-      .logo {
-        width: 70px;
-        height: 70px;
-        border-radius: 18px;
-        background: white;
-        border: 2px solid #e6dcf5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 34px;
-      }
-
-      nav {
-        display: flex;
-        align-items: center;
-        gap: 28px;
-        flex-wrap: wrap;
-      }
-
-      .nav-item {
-        position: relative;
-      }
-
-      .nav-button {
-        border: none;
-        background: transparent;
-        color: #222;
-        font-weight: 700;
-        font-size: 1rem;
-        padding: 12px 16px;
-        border-radius: 999px;
-        cursor: pointer;
-      }
-
-      .nav-button:hover,
-      .nav-button.active {
-        background: rgba(255, 255, 255, 0.45);
-      }
-
-      .dropdown {
-        position: absolute;
-        top: calc(100% + 10px);
-        left: 0;
-        min-width: 220px;
-        background: #f8f4ff;
-        border: 2px solid #d6c7ec;
-        border-radius: 18px;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-        padding: 10px;
-        z-index: 1000;
-      }
-
-      .dropdown-link {
-        display: block;
-        width: 100%;
-        text-align: left;
-        border: none;
-        background: transparent;
-        padding: 14px 18px;
-        border-radius: 12px;
-        color: #222;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .dropdown-link:hover {
-        background: rgba(0, 0, 0, 0.06);
-      }
-
-      @media (max-width: 900px) {
         header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: var(--ddd-spacing-5);
+          padding: var(--ddd-spacing-4);
+          border-radius: var(--ddd-radius-xl);
+          background: linear-gradient(135deg, #f5b6d6, #d6c7ec, #a9d5ee);
+          box-shadow: var(--ddd-boxShadow-sm);
+        }
+
+        .brand {
+          border: none;
+          background: transparent;
+          display: flex;
+          align-items: center;
+          gap: var(--ddd-spacing-3);
+          cursor: pointer;
+          color: #222;
+          text-align: left;
+        }
+
+        .logo {
+          width: 64px;
+          height: 64px;
+          border-radius: var(--ddd-radius-lg);
+          overflow: hidden;
+          background: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          box-shadow: var(--ddd-boxShadow-sm);
+        }
+
+        .logo img {
+          width: 150%;
+          height: 150%;
+          object-fit: cover;
+          transform: scale(1.2);
+        }
+
+        .brand-text {
+          display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          margin: 14px;
+          gap: var(--ddd-spacing-1);
+        }
+
+        .title {
+          font-size: clamp(1.4rem, 2.5vw, 2rem);
+          font-weight: 800;
+          line-height: 1;
+        }
+
+        .tagline {
+          font-size: 0.9rem;
+          font-weight: 500;
+          opacity: 0.75;
         }
 
         nav {
-          gap: 12px;
+          display: flex;
+          gap: var(--ddd-spacing-2);
+          flex-wrap: wrap;
+          justify-content: flex-end;
         }
-      }
-    `;
+
+        .nav-item {
+          position: relative;
+        }
+
+        .nav-button {
+          border: none;
+          background: rgba(255, 255, 255, 0.3);
+          color: #222;
+          font-weight: 800;
+          cursor: pointer;
+          padding: var(--ddd-spacing-2) var(--ddd-spacing-3);
+          border-radius: 999px;
+          font-size: 0.92rem;
+        }
+
+        .nav-button:hover {
+          background: rgba(255, 255, 255, 0.55);
+        }
+
+        .dropdown {
+          position: absolute;
+          top: calc(100% + 10px);
+          left: 0;
+          min-width: 210px;
+          background: #f8f4ff;
+          border: 2px solid #d6c7ec;
+          border-radius: var(--ddd-radius-lg);
+          box-shadow: var(--ddd-boxShadow-md);
+          padding: var(--ddd-spacing-2);
+          z-index: 1000;
+          box-sizing: border-box;
+        }
+
+        .dropdown.right {
+          left: auto;
+          right: 0;
+        }
+
+        .dropdown-link {
+          display: block;
+          width: 100%;
+          text-align: left;
+          border: none;
+          background: transparent;
+          padding: var(--ddd-spacing-3);
+          border-radius: var(--ddd-radius-md);
+          color: #222;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .dropdown-link:hover {
+          background: rgba(0, 0, 0, 0.06);
+        }
+
+        @media (max-width: 900px) {
+          header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          nav {
+            justify-content: flex-start;
+          }
+
+          .dropdown,
+          .dropdown.right {
+            left: 0;
+            right: auto;
+          }
+        }
+      `,
+    ];
   }
 }
 
-customElements.define(BadazzelingHeader.tag, BadazzelingHeader);
+if (!customElements.get(BadazzelingHeader.tag)) {
+  customElements.define(BadazzelingHeader.tag, BadazzelingHeader);
+}

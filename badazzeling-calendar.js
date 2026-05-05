@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
+import "./badazzeling-tab.js";
 
 export class BadazzelingCalendar extends DDDSuper(LitElement) {
   static get tag() {
@@ -10,12 +11,291 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
     return {
       ...super.properties,
       viewMode: { type: String, attribute: "view-mode" },
+      page: { type: String },
+      currentDate: { type: Object },
     };
   }
 
   constructor() {
     super();
     this.viewMode = "week";
+    this.page = "schedule";
+    this.currentDate = new Date(2026, 4, 4);
+  }
+
+  setView(mode) {
+    this.viewMode = mode;
+  }
+
+  setCalendarPage(page) {
+    this.page = page;
+  }
+
+  changeWeek(amount) {
+    const newDate = new Date(this.currentDate);
+    newDate.setDate(newDate.getDate() + amount * 7);
+    this.currentDate = newDate;
+  }
+
+  changeMonth(amount) {
+    const newDate = new Date(this.currentDate);
+    newDate.setMonth(newDate.getMonth() + amount);
+    this.currentDate = newDate;
+  }
+
+  isToday(date) {
+    return (
+      date.getFullYear() === 2026 &&
+      date.getMonth() === 4 &&
+      date.getDate() === 4
+    );
+  }
+
+  formatDate(date) {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  getStartOfWeek(date) {
+    const newDate = new Date(date);
+    const day = newDate.getDay();
+    newDate.setDate(newDate.getDate() - day);
+    return newDate;
+  }
+
+  renderSchedule() {
+    if (this.viewMode === "month") {
+      return this.renderMonthView();
+    }
+    return this.renderWeekView();
+  }
+
+  renderWeekView() {
+    const start = this.getStartOfWeek(this.currentDate);
+    const days = Array.from({ length: 7 }, (_, index) => {
+      const day = new Date(start);
+      day.setDate(start.getDate() + index);
+      return day;
+    });
+
+    return html`
+      <div class="calendar-shell">
+        <div class="calendar-header">
+          <button @click="${() => this.changeWeek(-1)}">←</button>
+          <span>Week of ${this.formatDate(start)}</span>
+          <button @click="${() => this.changeWeek(1)}">→</button>
+        </div>
+
+        <div class="week-grid">
+          ${days.map(
+            (day) => html`
+              <div class="day-card ${this.isToday(day) ? "today" : ""}">
+                <div class="day-name">
+                  ${day.toLocaleDateString("en-US", { weekday: "short" })}
+                </div>
+                <div class="day-number">${day.getDate()}</div>
+
+                ${day.getDate() === 4
+                  ? html`<div class="event-pill">Team Sparkle Practice</div>`
+                  : ""}
+                ${day.getDate() === 6
+                  ? html`<div class="event-pill">Water Bottle Challenge</div>`
+                  : ""}
+                ${day.getDate() === 9
+                  ? html`<div class="event-pill">Gem Rush Practice</div>`
+                  : ""}
+              </div>
+            `
+          )}
+        </div>
+      </div>
+    `;
+  }
+
+  renderMonthView() {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const startOffset = firstDay.getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const cells = [];
+
+    for (let i = 0; i < startOffset; i++) {
+      cells.push(null);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      cells.push(new Date(year, month, day));
+    }
+
+    return html`
+      <div class="calendar-shell">
+        <div class="calendar-header">
+          <button @click="${() => this.changeMonth(-1)}">←</button>
+          <span>
+            ${this.currentDate.toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+            })}
+          </span>
+          <button @click="${() => this.changeMonth(1)}">→</button>
+        </div>
+
+        <div class="month-days">
+          <span>Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+
+        <div class="month-grid">
+          ${cells.map((date) =>
+            date
+              ? html`
+                  <div class="month-cell ${this.isToday(date) ? "today" : ""}">
+                    <strong>${date.getDate()}</strong>
+                    ${date.getDate() === 4
+                      ? html`<div class="event-pill">Practice</div>`
+                      : ""}
+                    ${date.getDate() === 16
+                      ? html`<div class="event-pill">Competition</div>`
+                      : ""}
+                    ${date.getDate() === 25
+                      ? html`<div class="event-pill">Tryouts</div>`
+                      : ""}
+                  </div>
+                `
+              : html`<div class="month-cell empty"></div>`
+          )}
+        </div>
+      </div>
+    `;
+  }
+
+  renderUpcomingEvents() {
+    return html`
+      <div class="calendar-shell">
+        <div class="calendar-header simple">Upcoming Events</div>
+
+        <div class="calendar-body">
+          <div class="event-card">
+            <strong>Team Tryouts</strong>
+            <p>New members can try a beginner badazzeling round.</p>
+          </div>
+
+          <div class="event-card">
+            <strong>Mini Competition</strong>
+            <p>A short challenge focused on phone cases and small objects.</p>
+          </div>
+
+          <div class="event-card">
+            <strong>Championship Prep</strong>
+            <p>Teams practice speed rounds before the final event.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderImportantDates() {
+    return html`
+      <div class="calendar-shell">
+        <div class="calendar-header simple">Important Dates</div>
+
+        <div class="calendar-body">
+          <div class="event-card">
+            <strong>May 4, 2026</strong>
+            <p>Season schedule begins.</p>
+          </div>
+
+          <div class="event-card">
+            <strong>May 16, 2026</strong>
+            <p>First official competition.</p>
+          </div>
+
+          <div class="event-card">
+            <strong>May 25, 2026</strong>
+            <p>Team tryout deadline.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderContent() {
+    if (this.page === "upcoming-events") {
+      return this.renderUpcomingEvents();
+    }
+
+    if (this.page === "important-dates") {
+      return this.renderImportantDates();
+    }
+
+    return this.renderSchedule();
+  }
+
+  render() {
+    return html`
+      <div class="calendar-page">
+        <div class="top-text">
+          <div>
+            <h2>Calendar</h2>
+            <p class="description">
+              Teams within the league have different practice times. Use the
+              week and month views to find practices, competitions, and tryouts.
+            </p>
+          </div>
+
+          <div class="view-toggle">
+            <button
+              class="${this.viewMode === "week" ? "active" : ""}"
+              @click="${() => this.setView("week")}"
+            >
+              Show Week
+            </button>
+
+            <button
+              class="${this.viewMode === "month" ? "active" : ""}"
+              @click="${() => this.setView("month")}"
+            >
+              Show Month
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="small-tabs"
+          @tab-selected="${(e) => this.setCalendarPage(e.detail.page)}"
+        >
+          <badazzeling-tab
+            label="Schedule"
+            page="schedule"
+            ?active="${this.page === "schedule"}"
+          ></badazzeling-tab>
+
+          <badazzeling-tab
+            label="Upcoming Events"
+            page="upcoming-events"
+            ?active="${this.page === "upcoming-events"}"
+          ></badazzeling-tab>
+
+          <badazzeling-tab
+            label="Important Dates"
+            page="important-dates"
+            ?active="${this.page === "important-dates"}"
+          ></badazzeling-tab>
+        </div>
+
+        ${this.renderContent()}
+      </div>
+    `;
   }
 
   static get styles() {
@@ -29,10 +309,17 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
         }
 
         .calendar-page {
+          max-width: 1200px;
+          margin: 32px auto;
           background: white;
-          border-radius: 24px;
-          padding: 24px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+          border-radius: 28px;
+          padding: 28px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+          margin: 0 0 8px 0;
+          font-size: clamp(2rem, 4vw, 3.5rem);
         }
 
         .top-text {
@@ -45,26 +332,20 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
         }
 
         .description {
-          max-width: 700px;
-          font-size: 0.95rem;
+          max-width: 720px;
+          font-size: 1rem;
           line-height: 1.5;
+          margin: 0;
         }
 
-        .toggle-group {
+        .view-toggle,
+        .small-tabs {
           display: flex;
-          gap: 16px;
-          align-items: center;
+          gap: 12px;
           flex-wrap: wrap;
         }
 
-        .toggle-option {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.9rem;
-        }
-
-        .toggle-option button {
+        .view-toggle button {
           border: 2px solid #d6c7ec;
           background: white;
           border-radius: 999px;
@@ -73,167 +354,216 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
           cursor: pointer;
         }
 
-        .toggle-option button.active {
+        .view-toggle button:hover,
+        .view-toggle button.active {
           background: #e4c1f9;
         }
 
+        .small-tabs {
+          margin-bottom: 18px;
+        }
+
         .calendar-shell {
-          border-radius: 20px;
+          border-radius: 22px;
           overflow: hidden;
           background: #f8f4ff;
+          border: 2px solid #d6c7ec;
         }
 
         .calendar-header {
           background: #a9d5ee;
-          color: white;
-          padding: 12px 16px;
-          font-weight: 700;
+          color: #222;
+          padding: 14px 16px;
+          font-weight: 800;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 14px;
         }
 
-        .week-view,
-        .month-view {
-          min-height: 260px;
-          background: #f5b6d6;
-          padding: 16px;
+        .calendar-header.simple {
+          display: block;
+        }
+
+        .calendar-header button {
+          border: none;
+          background: rgba(255, 255, 255, 0.65);
+          border-radius: 999px;
+          width: 36px;
+          height: 36px;
+          font-weight: 900;
+          cursor: pointer;
         }
 
         .week-grid {
           display: grid;
-          grid-template-columns: 160px 1fr;
-          min-height: 220px;
-        }
-
-        .week-side {
-          background: #e7e7e7;
-          padding: 12px;
-        }
-
-        .week-main {
-          background: #e58fbc;
-          padding: 12px;
-        }
-
-        .month-grid {
-          display: grid;
           grid-template-columns: repeat(7, 1fr);
-          gap: 8px;
+          gap: 10px;
+          padding: 16px;
+          background: #f5b6d6;
         }
 
+        .day-card,
         .month-cell {
           background: white;
-          min-height: 90px;
-          border-radius: 12px;
-          padding: 8px;
-          border: 1px solid #ead7f7;
+          min-height: 130px;
+          border-radius: 16px;
+          padding: 12px;
+          border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        .cell-number {
-          font-weight: 700;
-          margin-bottom: 6px;
+        .day-card.today,
+        .month-cell.today {
+          border: 3px solid #6a4c93;
+          background: #fff6c1;
+        }
+
+        .day-name {
+          font-weight: 800;
+        }
+
+        .day-number {
+          font-size: 1.7rem;
+          font-weight: 900;
+          margin: 8px 0;
         }
 
         .event-pill {
           display: inline-block;
           background: #d6c7ec;
           border-radius: 999px;
-          padding: 4px 8px;
+          padding: 5px 9px;
           font-size: 0.8rem;
-          margin-top: 4px;
+          font-weight: 700;
+          margin-top: 6px;
         }
 
-        @media (max-width: 800px) {
+        .month-days,
+        .month-grid {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+        }
+
+        .month-days {
+          background: #f8f4ff;
+          padding: 10px 16px;
+          font-weight: 800;
+          text-align: center;
+        }
+
+        .month-grid {
+          gap: 8px;
+          padding: 16px;
+          background: #f5b6d6;
+        }
+
+        .month-cell {
+          min-height: 100px;
+        }
+
+        .month-cell.empty {
+          background: rgba(255, 255, 255, 0.45);
+        }
+
+        .calendar-body {
+          background: #f8f4ff;
+          padding: 18px;
+          min-height: 240px;
+          display: grid;
+          gap: 14px;
+        }
+
+        .event-card {
+          background: white;
+          border-radius: 16px;
+          padding: 16px;
+          border: 2px solid #d6c7ec;
+        }
+
+        .event-card p {
+          margin-bottom: 0;
+        }
+
+        @media (max-width: 900px) {
           .week-grid {
             grid-template-columns: 1fr;
+          }
+
+          .month-days {
+            display: none;
           }
 
           .month-grid {
             grid-template-columns: repeat(2, 1fr);
           }
         }
+
+        @media (prefers-color-scheme: dark) {
+          :host {
+            color: #f7f7f7;
+          }
+
+          .calendar-page {
+            background: #24212d;
+          }
+
+          .calendar-shell {
+            background: #302b3d;
+            border-color: #6d5a8a;
+          }
+
+          .calendar-header {
+            background: #24475d;
+            color: #fff;
+          }
+
+          .week-grid,
+          .month-grid {
+            background: #4c3150;
+          }
+
+          .calendar-body {
+            background: #302b3d;
+          }
+
+          .day-card,
+          .month-cell,
+          .event-card {
+            background: #302b3d;
+            color: #fff;
+            border-color: #6d5a8a;
+          }
+
+          .day-card.today,
+          .month-cell.today {
+            background: #4b3d24;
+            border-color: #fff6c1;
+          }
+
+          .event-pill {
+            background: #6d5a8a;
+          }
+
+          .month-days {
+            background: #302b3d;
+          }
+
+          .view-toggle button {
+            background: #302b3d;
+            color: #fff;
+            border-color: #6d5a8a;
+          }
+
+          .view-toggle button.active,
+          .view-toggle button:hover {
+            background: #6d5a8a;
+          }
+        }
       `,
     ];
   }
-
-  setView(mode) {
-    this.viewMode = mode;
-  }
-
-  renderWeekView() {
-    return html`
-      <div class="week-view">
-        <div class="week-grid">
-          <div class="week-side">
-            <div><strong>1</strong></div>
-            <div class="event-pill">Team A Practice</div>
-          </div>
-          <div class="week-main">
-            <div><strong>Monday</strong></div>
-            <p>Practice block / event area</p>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderMonthView() {
-    return html`
-      <div class="month-view">
-        <div class="month-grid">
-          ${Array.from({ length: 14 }, (_, i) => i + 1).map(
-            (day) => html`
-              <div class="month-cell">
-                <div class="cell-number">${day}</div>
-                ${day === 1 ? html`<div class="event-pill">Practice</div>` : ""}
-                ${day === 7 ? html`<div class="event-pill">Competition</div>` : ""}
-              </div>
-            `
-          )}
-        </div>
-      </div>
-    `;
-  }
-
-  render() {
-    return html`
-      <div class="calendar-page">
-        <div class="top-text">
-          <div class="description">
-            Teams within the league have different practice times. Find one near
-            you that works best. Here you can see the month or week at a glance.
-          </div>
-
-          <div class="toggle-group">
-            <div class="toggle-option">
-              <button
-                class="${this.viewMode === "week" ? "active" : ""}"
-                @click="${() => this.setView("week")}"
-              >
-                Show Week
-              </button>
-            </div>
-
-            <div class="toggle-option">
-              <button
-                class="${this.viewMode === "month" ? "active" : ""}"
-                @click="${() => this.setView("month")}"
-              >
-                Show Month
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="calendar-shell">
-          <div class="calendar-header">
-            ${this.viewMode === "week" ? "Monday" : "This Month"}
-          </div>
-          ${this.viewMode === "week"
-            ? this.renderWeekView()
-            : this.renderMonthView()}
-        </div>
-      </div>
-    `;
-  }
 }
 
-customElements.define(BadazzelingCalendar.tag, BadazzelingCalendar);
+if (!customElements.get(BadazzelingCalendar.tag)) {
+  customElements.define(BadazzelingCalendar.tag, BadazzelingCalendar);
+}
