@@ -303,6 +303,27 @@ export class BadazzelingApp extends DDDSuper(LitElement) {
           margin-top: var(--ddd-spacing-5);
         }
 
+        @media (prefers-color-scheme: dark) {
+  :host {
+    background: linear-gradient(180deg, #18151f 0%, #0f0d14 100%);
+    color: #f8f4ff;
+  }
+
+  .page {
+    background: #24212d;
+    color: #f8f4ff;
+    border: 1px solid #3b344a;
+  }
+
+  h2 {
+    color: #ffffff;
+  }
+
+  p {
+    color: #f8f4ff;
+  }
+}
+
         @media (max-width: 900px) {
           .page {
             margin: var(--ddd-spacing-4);

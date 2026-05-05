@@ -122,23 +122,28 @@ export class BadazzelingTeamCard extends DDDSuper(LitElement) {
         }
 
         @media (prefers-color-scheme: dark) {
-          .card {
-            background: #ffffff;
-            color: #111;
-          }
+  .card {
+    background: #302b3d;
+    color: #f8f4ff;
+    border: 1px solid #6d5a8a;
+  }
 
-          .image-wrap {
-            background: #f8f4ff;
-          }
+  .image-wrap {
+    background: #f8f4ff;
+  }
 
-          h3 {
-            color: #111;
-          }
+  .content {
+    background: #302b3d;
+  }
 
-          p {
-            color: #333;
-          }
-        }
+  h3 {
+    color: #ffffff;
+  }
+
+  p {
+    color: #f8f4ff;
+  }
+}
       `,
     ];
   }

@@ -20,7 +20,7 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
     super();
     this.viewMode = "week";
     this.page = "schedule";
-    this.currentDate = new Date(2026, 4, 4);
+    this.currentDate = new Date();
   }
 
   setView(mode) {
@@ -44,10 +44,12 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
   }
 
   isToday(date) {
+    const today = new Date();
+
     return (
-      date.getFullYear() === 2026 &&
-      date.getMonth() === 4 &&
-      date.getDate() === 4
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
     );
   }
 
@@ -66,6 +68,16 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
     return newDate;
   }
 
+  getEventForDate(date) {
+    const day = date.getDay();
+
+    if (day === 1) return "Team Sparkle Practice";
+    if (day === 3) return "Water Bottle Challenge";
+    if (day === 6) return "Gem Rush Practice";
+
+    return "";
+  }
+
   renderSchedule() {
     if (this.viewMode === "month") {
       return this.renderMonthView();
@@ -75,10 +87,17 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
 
   renderWeekView() {
     const start = this.getStartOfWeek(this.currentDate);
+
     const days = Array.from({ length: 7 }, (_, index) => {
-      const day = new Date(start);
-      day.setDate(start.getDate() + index);
-      return day;
+      const date = new Date(start);
+      date.setDate(start.getDate() + index);
+
+      return {
+        label: date.toLocaleDateString("en-US", { weekday: "short" }),
+        number: date.getDate(),
+        date,
+        event: this.getEventForDate(date),
+      };
     });
 
     return html`
@@ -92,20 +111,12 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
         <div class="week-grid">
           ${days.map(
             (day) => html`
-              <div class="day-card ${this.isToday(day) ? "today" : ""}">
-                <div class="day-name">
-                  ${day.toLocaleDateString("en-US", { weekday: "short" })}
-                </div>
-                <div class="day-number">${day.getDate()}</div>
+              <div class="day-card ${this.isToday(day.date) ? "today" : ""}">
+                <div class="day-name">${day.label}</div>
+                <div class="day-number">${day.number}</div>
 
-                ${day.getDate() === 4
-                  ? html`<div class="event-pill">Team Sparkle Practice</div>`
-                  : ""}
-                ${day.getDate() === 6
-                  ? html`<div class="event-pill">Water Bottle Challenge</div>`
-                  : ""}
-                ${day.getDate() === 9
-                  ? html`<div class="event-pill">Gem Rush Practice</div>`
+                ${day.event
+                  ? html`<div class="event-pill">${day.event}</div>`
                   : ""}
               </div>
             `
@@ -161,14 +172,11 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
               ? html`
                   <div class="month-cell ${this.isToday(date) ? "today" : ""}">
                     <strong>${date.getDate()}</strong>
-                    ${date.getDate() === 4
-                      ? html`<div class="event-pill">Practice</div>`
-                      : ""}
-                    ${date.getDate() === 16
-                      ? html`<div class="event-pill">Competition</div>`
-                      : ""}
-                    ${date.getDate() === 25
-                      ? html`<div class="event-pill">Tryouts</div>`
+
+                    ${this.getEventForDate(date)
+                      ? html`<div class="event-pill">
+                          ${this.getEventForDate(date)}
+                        </div>`
                       : ""}
                   </div>
                 `
@@ -211,18 +219,18 @@ export class BadazzelingCalendar extends DDDSuper(LitElement) {
 
         <div class="calendar-body">
           <div class="event-card">
-            <strong>May 4, 2026</strong>
-            <p>Season schedule begins.</p>
+            <strong>Season schedule begins</strong>
+            <p>The season starts during the first full week shown on the schedule.</p>
           </div>
 
           <div class="event-card">
-            <strong>May 16, 2026</strong>
-            <p>First official competition.</p>
+            <strong>First official competition</strong>
+            <p>Teams compete after weekly practices and challenge rounds.</p>
           </div>
 
           <div class="event-card">
-            <strong>May 25, 2026</strong>
-            <p>Team tryout deadline.</p>
+            <strong>Team tryout deadline</strong>
+            <p>New members should complete tryouts before final team placement.</p>
           </div>
         </div>
       </div>
